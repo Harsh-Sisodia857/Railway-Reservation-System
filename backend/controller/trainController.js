@@ -15,7 +15,7 @@ const getTrains = async (req, res) => {
 };
 
 // creating new train
-const postTrain = async (req, res) => {
+const createTrain = async (req, res) => {
     const {
         trainName,
         trainNumber,
@@ -67,8 +67,8 @@ const getTrain = async (req, res) => {
         success: true,
         train: {
             id: Train._id,
-            name: Train.name,
-            users: Train.users,
+            name: Train.trainName,
+            TrainNumber: Train.trainNumber,
             Destination: Train.Destination,
             Source: Train.Source,
             startTime: Train.startTime,
@@ -95,4 +95,4 @@ const deleteTrain = async (req, res) => {
     ).catch((err) => console.log(err));
 };
 
-module.exports = { getTrains, postTrain, getTrain, deleteTrain };
+module.exports = { getTrains, createTrain, getTrain, deleteTrain };

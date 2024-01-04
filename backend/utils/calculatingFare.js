@@ -124,3 +124,9 @@ function calculateFarePrice(source, destination) {
     const totalFare = baseFare + (farePerKilometer * distance);
     return totalFare;
 }
+
+module.exports = {
+    calculateFarePrice,
+    isTrainAvailable,
+    getDistance
+}

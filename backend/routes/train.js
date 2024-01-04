@@ -3,14 +3,14 @@ const router = express.Router();
 
 const {
     getTrains,
-    postTrain,
+    createTrain,
     getTrain,
     deleteTrain,
-} = require("../controllers/trainController.js");
+} = require("../controller/trainController.js");
 
-router.get("/", getTrains);
-router.post("/", postTrain);
+router.get("/allTrains", getTrains);
+router.post("/create", createTrain);
 router.get("/:id", getTrain);
-router.delete("/", deleteTrain);
+router.delete("/delete", deleteTrain);
 
 module.exports = router;

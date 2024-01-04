@@ -6,12 +6,13 @@ const {
     getBookings,
     deleteBooking,
     getBooking,
-} = require("../controllers/bookController.js");
+} = require("../controller/bookController.js");
 
+const {isAuthenticatedUser} = require("../middleware/auth.js")
 
-router.post("/", createBooking);
-router.get("/", getBookings);
-router.get("/:id", getBooking);
-router.delete("/:id", deleteBooking);
+router.post("/", isAuthenticatedUser, createBooking);
+router.get("/bookings", isAuthenticatedUser, getBookings);
+router.get("/:id", isAuthenticatedUser, getBooking);
+router.delete("/:id", isAuthenticatedUser, deleteBooking);
 
 module.exports = router;

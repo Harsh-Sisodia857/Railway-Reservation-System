@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
 
+
 const bookingSchema = mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +23,7 @@ const bookingSchema = mongoose.Schema({
         required: true,
     },
     date: {
-        type: String,
+        type: Date,
         required: true,
     },
     fare: {

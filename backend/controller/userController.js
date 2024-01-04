@@ -1,15 +1,20 @@
-const User = require('../models/userModel');
+const User = require('../model/userModel');
 const bcrypt = require("bcryptjs");
 const sendToken = require('../utils/jwtToken');
 const sendEmail = require('../utils/sendEmail.js')
 const crypto = require("crypto")
+const catchAsyncError = require('../middleware/catchAsyncError');
+const ErrorHandler = require("../utils/errroHandler");
+
 
 // Register a User
 exports.registerUser = catchAsyncError(async (req, res, next) => {
     const { name, email, password } = req.body;
     const salt = await bcrypt.genSalt();
     const secPass = await bcrypt.hash(password, salt);
-
+    const isExist = User.find({ email });
+    if (isExist)
+        return res.json({ "message : ": "User Already Exist" });
     const user = await User.create({
         name, email, password: secPass,
         avatar: {
@@ -40,7 +45,7 @@ exports.loginUser = catchAsyncError(async (req, res, next) => {
         return next(new ErrorHandler("Invalid Credentials", 401));
     }
     sendToken(user, 200, res);
-
+    // console.log("COOKIE ", req);
 })
 
 // Logout User
@@ -119,7 +124,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 })
 
 // Get User Detail
-exports.getUserDetails = catchAsyncError(async (req, res, next) => {
+exports.profile = catchAsyncError(async (req, res, next) => {
     const user = await User.findById(req.user.id)
     res.status(200).json({
         success: true,

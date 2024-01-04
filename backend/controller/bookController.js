@@ -3,12 +3,12 @@ const booking = require("../model/booking");
 const train = require('../model/trainModel');
 
 const createBooking = async (req, res) => {
-    const { train : trainId, from, to, qty, date } = req.body;
+    const { trainId, from, to, qty } = req.body;
     const Train = await train.findById(trainId);
-    if (Train) return res.json({
+    if (!Train) return res.json({
         success: false,
         message: "Train Not Found"
-    })
+    });
     if (!isTrainAvailable(from, to)) {
         return res.json({
             success: false,
@@ -16,13 +16,14 @@ const createBooking = async (req, res) => {
         })
     }
     const fare = calculateFarePrice(from, to);
-    const booking = await booking.create({
-        user: req.user._id,
-        train, from, to, qty, date, fare
+    console.log(req.user);
+    const bookingData = await booking.create({
+        user: req.user.id,
+        train, from, to, qty, date : Date.now(), fare
     });
     res.status(201).json({
         success: true,
-        booking,
+        bookingData,
     });
 
 }
