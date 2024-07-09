@@ -1,11 +1,11 @@
 const { calculateFarePrice, isTrainAvailable } = require("../utils/calculatingFare");
-const booking = require("../model/booking");
-const train = require('../model/trainModel');
+const Booking = require("../model/booking");
+const Train = require('../model/trainModel');
 
 const createBooking = async (req, res) => {
     const { trainId, from, to, qty } = req.body;
-    const Train = await train.findById(trainId);
-    if (!Train) return res.json({
+    const train = await Train.findById(trainId);
+    if (!train) return res.json({
         success: false,
         message: "Train Not Found"
     });
@@ -15,22 +15,22 @@ const createBooking = async (req, res) => {
             message: "Train Route Not Found"
         })
     }
-    const fare = calculateFarePrice(from, to);
+    const fare = (calculateFarePrice(from, to))*qty;
     console.log(req.user);
-    const bookingData = await booking.create({
+    const BookingData = await Booking.create({
         user: req.user.id,
         train, from, to, qty, date : Date.now(), fare
     });
     res.status(201).json({
         success: true,
-        bookingData,
+        BookingData,
     });
 
 }
 
 const getBooking = async (req, res) => {
     const {id} = req.params;
-    const getBookingDetails = await booking.findById(id);
+    const getBookingDetails = await Booking.findById(id);
     if (!getBookingDetails) return res.json({ message : `Booking does not exist at id ${id}`,success : false });
     res.status(200).json({
         success:true,
@@ -39,7 +39,7 @@ const getBooking = async (req, res) => {
 }
 
 const getBookings = async (req, res) => {
-    const getBookingDetails = await booking.find({});
+    const getBookingDetails = await Booking.find({});
     res.status(200).json({
         success: true,
         getBookingDetails
@@ -48,14 +48,14 @@ const getBookings = async (req, res) => {
 
 const deleteBooking = async (req, res) => {
     const { id } = req.params;
-    const bookingToBeDeleted = await booking.findById(id);
-    if (bookingToBeDeleted)
+    const BookingToBeDeleted = await Booking.findById(id);
+    if (!BookingToBeDeleted)
         return res.json({ message: `Booking does not exist at id ${id}`, success: false });
-    await bookingToBeDeleted.remove()
-    res.status(200).json({
+    await Booking.deleteOne({ _id: id }); 
+        res.status(200).json({
         success: true,
         message : "Booking is Deleted",
-        bookingToBeDeleted
+        BookingToBeDeleted
     });
 }   
 

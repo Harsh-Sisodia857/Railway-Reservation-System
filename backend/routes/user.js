@@ -10,14 +10,15 @@ const {
     loginUser,
     logout,
 } = require("../controller/userController");
+const { isAuthenticatedUser } = require("../middleware/auth");
 
 
 router.post("/create", registerUser);
 router.post("/login", loginUser);
-router.post("/logout", logout);
-router.get("/:id", getSingleUser);
-router.get("/", getAllUser);
-router.delete("/:id",  deleteUser);
-router.get("/me",  profile);
+router.post("/logout",isAuthenticatedUser, logout);
+router.get("/profile",isAuthenticatedUser,  profile);
+router.get("/:id",isAuthenticatedUser, getSingleUser);
+router.get("/",isAuthenticatedUser, getAllUser);
+router.delete("/:id",isAuthenticatedUser,  deleteUser);
 
 module.exports = router;

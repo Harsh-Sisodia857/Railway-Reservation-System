@@ -20,11 +20,11 @@ const trainSchema = new mongoose.Schema({
         required: [true,"Please Enter Train Destination"]
     },
     startTime: {
-        type: Date,
+        type: String,
         required: [true,"Please Enter startTime of train"]
     },
     reachTime: {
-        type: Date,
+        type: String,
         required: [true,"Please Enter reachTime of train"]
     }
 },{

@@ -12,15 +12,11 @@ exports.registerUser = catchAsyncError(async (req, res, next) => {
     const { name, email, password } = req.body;
     const salt = await bcrypt.genSalt();
     const secPass = await bcrypt.hash(password, salt);
-    const isExist = User.find({ email });
+    const isExist = await User.findOne({ email });
     if (isExist)
         return res.json({ "message : ": "User Already Exist" });
     const user = await User.create({
-        name, email, password: secPass,
-        avatar: {
-            public_id: "this is a sample Id",
-            url: "profilePicUrl"
-        }
+        name, email, password: secPass
     });
 
     sendToken(user, 201, res);
@@ -125,12 +121,23 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
 
 // Get User Detail
 exports.profile = catchAsyncError(async (req, res, next) => {
-    const user = await User.findById(req.user.id)
+    const id = req.user.id;
+
+    const user = await User.findOne({ _id : id});
+    if (!user) {
+        return res.status(404).json({
+            success: false,
+            message: "User not found"
+        });
+    }
+
     res.status(200).json({
         success: true,
+        message : "Success",
         user
-    })
+    });
 });
+
 
 // update User password
 exports.updatePassword = catchAsyncError(async (req, res, next) => {
@@ -234,7 +241,7 @@ exports.deleteUser = catchAsyncError(async (req, res, next) => {
         );
     }
 
-    await user.remove();
+    await user.deleteOne();
 
     res.status(200).json({
         success: true,
