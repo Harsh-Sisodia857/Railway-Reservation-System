@@ -3,9 +3,15 @@ const bcrypt = require("bcryptjs")
 const validator = require("validator");
 const jwt = require("jsonwebtoken")
 const userSchema = new mongoose.Schema({
-    name: {
+    firstName: {
         type: String,
-        required: [true, "Please Enter Your Name"],
+        required: [true, "Please Enter Your First Name"],
+        maxLength: [50, "Name cannot exceed 50 characters"],
+        minLength: [3, "Name should have atleast 3 Character"]
+    },
+    lastName: {
+        type: String,
+        required: [true, "Please Enter Your Last Name"],
         maxLength: [50, "Name cannot exceed 50 characters"],
         minLength: [3, "Name should have atleast 3 Character"]
     },
@@ -20,6 +26,24 @@ const userSchema = new mongoose.Schema({
         required: [true, "Please Enter Your Password"],
         minLength: [3, "Name should have atleast 3 Character"],
         select: false
+    },
+    phone : {
+        type: String,
+        required: [false, "Please Enter Your Phone Number"],
+        minLength: [10, "Phone Number should have 10 Character"]
+    },
+    address : {
+        type : String,
+        requried : [true,"Please Enter Your Address"],
+        minLength : [5, "Address Should have atleast 5 character"]
+    },
+    postalCode : {
+        type : String,
+        requried : [true,"Please Enter Your Postal Code"],
+    },
+    city : {
+        type : String,
+        requried : [true,"Please Enter Your City"],
     },
     role: {
         type: String,

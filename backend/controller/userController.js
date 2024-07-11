@@ -9,14 +9,14 @@ const ErrorHandler = require("../utils/errroHandler");
 
 // Register a User
 exports.registerUser = catchAsyncError(async (req, res, next) => {
-    const { name, email, password } = req.body;
+    const { name, email, password, city, postalCode, phone, address } = req.body;
     const salt = await bcrypt.genSalt();
     const secPass = await bcrypt.hash(password, salt);
     const isExist = await User.findOne({ email });
     if (isExist)
         return res.json({ "message : ": "User Already Exist" });
     const user = await User.create({
-        name, email, password: secPass
+        name, email, password: secPass, city, postalCode, phone, address
     });
 
     sendToken(user, 201, res);
